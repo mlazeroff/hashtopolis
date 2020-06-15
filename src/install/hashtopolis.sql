@@ -712,7 +712,8 @@ CREATE TABLE `Task` (
   `chunkSize`           BIGINT(20)   NOT NULL,
   `forcePipe`           TINYINT(4)   NOT NULL,
   `usePreprocessor`     TINYINT(4)   NOT NULL,
-  `preprocessorCommand` VARCHAR(256) NOT NULL
+  `preprocessorCommand` VARCHAR(256) NOT NULL,
+  `createdByUserId`     INT(11)      NOT NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE `TaskDebugOutput` (
@@ -973,7 +974,8 @@ ALTER TABLE `SupertaskPretask`
 
 ALTER TABLE `Task`
   ADD PRIMARY KEY (`taskId`),
-  ADD KEY `crackerBinaryId` (`crackerBinaryId`);
+  ADD KEY `crackerBinaryId` (`crackerBinaryId`),
+  ADD KEY `createdByUserId` (`createdByUserId`);
 
 ALTER TABLE `TaskDebugOutput`
   ADD PRIMARY KEY (`taskDebugOutputId`);
@@ -1227,7 +1229,8 @@ ALTER TABLE `SupertaskPretask`
 ALTER TABLE `Task`
   ADD CONSTRAINT `Task_ibfk_1` FOREIGN KEY (`crackerBinaryId`)     REFERENCES `CrackerBinary` (`crackerBinaryId`),
   ADD CONSTRAINT `Task_ibfk_2` FOREIGN KEY (`crackerBinaryTypeId`) REFERENCES `CrackerBinaryType` (`crackerBinaryTypeId`),
-  ADD CONSTRAINT `Task_ibfk_3` FOREIGN KEY (`taskWrapperId`)       REFERENCES `TaskWrapper` (`taskWrapperId`);
+  ADD CONSTRAINT `Task_ibfk_3` FOREIGN KEY (`taskWrapperId`)       REFERENCES `TaskWrapper` (`taskWrapperId`),
+  ADD CONSTRAINT `Task_ibfk_4` FOREIGN KEY (`createdByUserId`)     REFERENCES `User` (`userId`);
 
 ALTER TABLE `TaskDebugOutput`
   ADD CONSTRAINT `TaskDebugOutput_ibfk_1` FOREIGN KEY (`taskId`) REFERENCES `Task` (`taskId`);
