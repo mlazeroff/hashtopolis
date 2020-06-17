@@ -204,9 +204,10 @@ class PretaskUtils {
    * @param int $hashlistId
    * @param string $name
    * @param int $crackerBinaryId
+   * @param int $user
    * @throws HTException
    */
-  public static function runPretask($pretaskId, $hashlistId, $name, $crackerBinaryId) {
+  public static function runPretask($pretaskId, $hashlistId, $name, $crackerBinaryId, $user) {
     $pretask = Factory::getPretaskFactory()->get($pretaskId);
     if ($pretask == null) {
       throw new HTException("Invalid preconfigured task ID!");
@@ -254,7 +255,8 @@ class PretaskUtils {
       0,
       0,
       0,
-      ''
+      '',
+        $user
     );
     $task = Factory::getTaskFactory()->save($task);
     TaskUtils::copyPretaskFiles($pretask, $task);
