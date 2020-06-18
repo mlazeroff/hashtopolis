@@ -341,15 +341,27 @@ class APISendProgress extends APIBasic {
       Factory::getHashlistFactory()->inc($hashlist, Hashlist::CRACKED, $sumCracked);
     }
     Factory::getAgentFactory()->getDB()->commit();
-    
+  
     DServerLog::log(DServerLog::TRACE, "Updated with received cracks", [$this->agent, $chunk]);
-    
+  
     if ($chunk->getState() == DHashcatStatus::STATUS_ABORTED_RUNTIME) {
       // the chunk was manually interrupted
       Factory::getChunkFactory()->set($chunk, Chunk::STATE, DHashcatStatus::ABORTED);
       DServerLog::log(DServerLog::TRACE, "Chunk was manually interrupted", [$this->agent]);
       $this->sendErrorResponse(PActions::SEND_PROGRESS, "Chunk was manually interrupted.");
     }
+  
+    // check if a task with higher priority has been started
+    // if so, abort chunk and switch to new task
+    $bestTask = TaskUtils::getBestTask($this->agent);
+    $bestTask = TaskUtils::getImportantTask($bestTask, $task, $this->agent);
+    if ($bestTask->getId() != $task->getId()) {
+      // abort chunk
+      Factory::getChunkFactory()->set($chunk, CHUNK::STATE, DHashcatStatus::ABORTED);
+      DServerLog::log(DServerLog::TRACE, "Chunk: Task with higher priority found. Switching.", [$this->agent]);
+      $this->sendErrorResponse(PActions::SEND_PROGRESS, "Task with higher priority found. Switching.");
+    }
+  
     /** Check if the task is done */
     $taskdone = false;
     if ($relativeProgress == 10000 && $task->getKeyspaceProgress() == $task->getKeyspace()) {
