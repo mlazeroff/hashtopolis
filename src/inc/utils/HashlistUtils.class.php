@@ -497,9 +497,9 @@ class HashlistUtils {
     $superHashlists = $joined[Factory::getHashlistFactory()->getModelName()];
     $toDelete = [];
     foreach ($superHashlists as $superHashlist) {
-      Factory::getHashlistFactory()->dec($superHashlist, $hashlist->getHashCount());
-      Factory::getHashlistFactory()->dec($superHashlist, $hashlist->getCracked());
-      
+      Factory::getHashlistFactory()->dec($superHashlist, Hashlist::HASH_COUNT);
+      Factory::getHashlistFactory()->dec($superHashlist, Hashlist::CRACKED);
+  
       if ($superHashlist->getHashCount() <= 0) {
         // this superhashlist has no hashlist which belongs to it anymore -> delete it
         $toDelete[] = $superHashlist;
