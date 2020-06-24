@@ -26,6 +26,7 @@ use DBA\AgentStat;
 use DBA\FileDelete;
 use DBA\Factory;
 use DBA\Speed;
+use DBA\User;
 
 /**
  *
@@ -531,6 +532,17 @@ class Util {
         $set->addValue('numChunks', $chunkInfo[0]);
         $set->addValue('performance', $taskInfo[4]);
         $set->addValue('speed', $taskInfo[5]);
+  
+        // get owner information
+        $qf = new QueryFilter(User::USER_ID, $task->getCreatedByUserId(), '=');
+        $users = Factory::getUserFactory()->filter([Factory::FILTER => [$qf]]);
+        $user = $users[0];
+        $username = $user->getUsername();
+        $userGroup = Util::getNonDefaultGroup($user);
+        $userGroupName = $userGroup->getGroupName();
+        $set->addValue('username', $username);
+        $set->addValue('group', $userGroupName);
+  
         $taskList[] = $set;
       }
     }
@@ -1396,6 +1408,21 @@ class Util {
   public static function databaseIndexExists($table, $column) {
     $result = Factory::getAgentFactory()->getDB()->query("SHOW INDEX FROM `$table` WHERE Column_name='$column'");
     return $result->rowCount() > 0;
+  }
+  
+  /**
+   * @param User $user
+   * @return AccessGroup
+   */
+  public static function getNonDefaultGroup($user) {
+    $qf = new QueryFilter(AccessGroupUser::USER_ID, $user->getId(), '=');
+    $qf2 = new QUeryFilter(AccessGroupUser::ACCESS_GROUP_ID, 1, '!=');
+    $groups = Factory::getAccessGroupUserFactory()->filter([Factory::FILTER => [$qf, $qf2]]);
+    $group = $groups[0];
+    $qf = new QueryFilter(AccessGroup::ACCESS_GROUP_ID, $group->getAccessGroupId(), '=');
+    $ag = Factory::getAccessGroupFactory()->filter([Factory::FILTER => [$qf]])[0];
+    return $ag;
+    
   }
 }
 

@@ -6,26 +6,32 @@
     <a href="tasks.php?id=[[set.getVal('taskId')]]">[[set.getVal('taskName')]]</a>
     [[Util::tickdone([[set.getVal('sumProgress')]], [[set.getVal('keyspace')]])]]
     {{IF [[set.getVal('isActive')]]}}
-      <i class="fas fa-spinner fa-spin"></i>
+    <i class="fas fa-spinner fa-spin"></i>
     {{ENDIF}}
     {{IF [[set.getVal('isCpu')]] == 1}}
-      <br>CPU only
+    <br>CPU only
     {{ENDIF}}
     {{IF [[set.getVal('isSmall')]] == 1}}
-      <br>Small Task
+    <br>Small Task
     {{ENDIF}}
     {{IF [[set.getVal('isPrince')]] == 1}}
-      <br>PRINCE
+    <br>PRINCE
     {{ENDIF}}
   </td>
   <td>
+    [[set.getVal('username')]]
+  </td>
+  <td>
+    [[set.getVal('group')]]
+  </td>
+  <td>
     {{IF [[accessControl.hasPermission([[$DAccessControl::VIEW_HASHLIST_ACCESS]])]]}}
-      <a href="hashlists.php?id=[[set.getVal('hashlistId')]]">[[set.getVal('hashlistName')]]</a>
+    <a href="hashlists.php?id=[[set.getVal('hashlistId')]]">[[set.getVal('hashlistName')]]</a>
     {{ELSE}}
-      [[set.getVal('hashlistName')]]
+    [[set.getVal('hashlistName')]]
     {{ENDIF}}
     {{IF [[set.getVal('isSecret')]] == 1}}
-      <span class="fas fa-lock" aria-hidden="true"></span>
+    <span class="fas fa-lock" aria-hidden="true"></span>
     {{ENDIF}}
     {{IF [[set.getVal('hashCount')]] == [[set.getVal('hashlistCracked')]]}}
       [[Util::tickdone(1, 1)]]

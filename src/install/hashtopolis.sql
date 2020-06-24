@@ -55,7 +55,7 @@ CREATE TABLE `AgentBinary` (
 ) ENGINE = InnoDB;
 
 INSERT INTO `AgentBinary` (`agentBinaryId`, `type`, `version`, `operatingSystems`, `filename`, `updateTrack`, `updateAvailable`) VALUES
-  (1, 'python', '0.6.0', 'Windows, Linux, OS X', 'hashtopolis.zip', 'stable', '');
+  (1, 'python', '0.6.0.10', 'Windows, Linux, OS X', 'hashtopolis.zip', 'stable', '');
 
 CREATE TABLE `AgentError` (
   `agentErrorId` INT(11) NOT NULL,
@@ -196,7 +196,7 @@ CREATE TABLE `CrackerBinary` (
 ) ENGINE = InnoDB;
 
 INSERT INTO `CrackerBinary` (`crackerBinaryId`, `crackerBinaryTypeId`, `version`, `downloadUrl`, `binaryName`) VALUES
-  (1, 1, '5.1.0', 'https://hashcat.net/files/hashcat-5.1.0.7z', 'hashcat');
+  (1, 1, '6.0.0', 'https://hashcat.net/files/hashcat-6.0.0.7z', 'hashcat');
 
 CREATE TABLE `CrackerBinaryType` (
   `crackerBinaryTypeId` INT(11)     NOT NULL,
@@ -689,66 +689,71 @@ CREATE TABLE `SupertaskPretask` (
   `pretaskId`          INT(11) NOT NULL
 ) ENGINE = InnoDB;
 
-CREATE TABLE `Task` (
-  `taskId`              INT(11)      NOT NULL,
-  `taskName`            VARCHAR(256) NOT NULL,
-  `attackCmd`           VARCHAR(256) NOT NULL,
-  `chunkTime`           INT(11)      NOT NULL,
-  `statusTimer`         INT(11)      NOT NULL,
-  `keyspace`            BIGINT(20)   NOT NULL,
-  `keyspaceProgress`    BIGINT(20)   NOT NULL,
-  `priority`            INT(11)      NOT NULL,
-  `color`               VARCHAR(20)  NULL,
-  `isSmall`             TINYINT(4)   NOT NULL,
-  `isCpuTask`           TINYINT(4)   NOT NULL,
-  `useNewBench`         TINYINT(4)   NOT NULL,
-  `skipKeyspace`        BIGINT(20)   NOT NULL,
-  `crackerBinaryId`     INT(11)      DEFAULT NULL,
-  `crackerBinaryTypeId` INT(11)      NULL,
-  `taskWrapperId`       INT(11)      NOT NULL,
-  `isArchived`          TINYINT(4)   NOT NULL,
-  `notes`               TEXT         NOT NULL,
-  `staticChunks`        INT(11)      NOT NULL,
-  `chunkSize`           BIGINT(20)   NOT NULL,
-  `forcePipe`           TINYINT(4)   NOT NULL,
-  `usePreprocessor`     TINYINT(4)   NOT NULL,
-  `preprocessorCommand` VARCHAR(256) NOT NULL
+CREATE TABLE `Task`(
+                       `taskId`              INT(11)      NOT NULL,
+                       `taskName`            VARCHAR(256) NOT NULL,
+                       `attackCmd`           VARCHAR(256) NOT NULL,
+                       `chunkTime`           INT(11)      NOT NULL,
+                       `statusTimer`         INT(11)      NOT NULL,
+                       `keyspace`            BIGINT(20)   NOT NULL,
+                       `keyspaceProgress`    BIGINT(20)   NOT NULL,
+                       `priority`            INT(11)      NOT NULL,
+                       `color`               VARCHAR(20)  NULL,
+                       `isSmall`             TINYINT(4)   NOT NULL,
+                       `isCpuTask`           TINYINT(4)   NOT NULL,
+                       `useNewBench`         TINYINT(4)   NOT NULL,
+                       `skipKeyspace`        BIGINT(20)   NOT NULL,
+                       `crackerBinaryId`     INT(11) DEFAULT NULL,
+                       `crackerBinaryTypeId` INT(11)      NULL,
+                       `taskWrapperId`       INT(11)      NOT NULL,
+                       `isArchived`          TINYINT(4)   NOT NULL,
+                       `notes`               TEXT         NOT NULL,
+                       `staticChunks`        INT(11)      NOT NULL,
+                       `chunkSize`           BIGINT(20)   NOT NULL,
+                       `forcePipe`           TINYINT(4)   NOT NULL,
+                       `usePreprocessor`     TINYINT(4)   NOT NULL,
+                       `preprocessorCommand` VARCHAR(256) NOT NULL,
+                       `createdByUserId`     INT(11)      NOT NULL
 ) ENGINE = InnoDB;
 
-CREATE TABLE `TaskDebugOutput` (
-  `taskDebugOutputId` INT(11)      NOT NULL,
-  `taskId`            INT(11)      NOT NULL,
-  `output`            VARCHAR(256) NOT NULL
-) ENGINE=InnoDB;
- 
-CREATE TABLE `TaskWrapper` (
-  `taskWrapperId`   INT(11)      NOT NULL,
-  `priority`        INT(11)      NOT NULL,
-  `taskType`        INT(11)      NOT NULL,
-  `hashlistId`      INT(11)      NOT NULL,
-  `accessGroupId`   INT(11)      DEFAULT NULL,
-  `taskWrapperName` VARCHAR(100) NOT NULL,
-  `isArchived`      TINYINT(4)   NOT NULL,
-  `cracked`         INT(11)      NOT NULL
-)ENGINE = InnoDB;
+CREATE TABLE `TaskDebugOutput`
+(
+    `taskDebugOutputId` INT(11)      NOT NULL,
+    `taskId`            INT(11)      NOT NULL,
+    `output`            VARCHAR(256) NOT NULL
+) ENGINE = InnoDB;
 
-CREATE TABLE `User` (
-  `userId`             INT(11)      NOT NULL,
-  `username`           VARCHAR(100) NOT NULL,
-  `email`              VARCHAR(150) NOT NULL,
-  `passwordHash`       VARCHAR(256) NOT NULL,
-  `passwordSalt`       VARCHAR(256) NOT NULL,
-  `isValid`            TINYINT(4)   NOT NULL,
-  `isComputedPassword` TINYINT(4)   NOT NULL,
-  `lastLoginDate`      BIGINT       NOT NULL,
-  `registeredSince`    BIGINT       NOT NULL,
-  `sessionLifetime`    INT(11)      NOT NULL,
-  `rightGroupId`       INT(11)      NOT NULL,
-  `yubikey`            VARCHAR(256) DEFAULT NULL,
-  `otp1`               VARCHAR(256) DEFAULT NULL,
-  `otp2`               VARCHAR(256) DEFAULT NULL,
-  `otp3`               VARCHAR(256) DEFAULT NULL,
-  `otp4`               VARCHAR(256) DEFAULT NULL
+CREATE TABLE `TaskWrapper`
+(
+    `taskWrapperId`   INT(11)      NOT NULL,
+    `priority`        INT(11)      NOT NULL,
+    `taskType`        INT(11)      NOT NULL,
+    `hashlistId`      INT(11)      NOT NULL,
+    `accessGroupId`   INT(11) DEFAULT NULL,
+    `taskWrapperName` VARCHAR(100) NOT NULL,
+    `isArchived`      TINYINT(4)   NOT NULL,
+    `cracked`         INT(11)      NOT NULL,
+    `createdByUserId` INT(11)      NOT NULL
+) ENGINE = InnoDB;
+
+CREATE TABLE `User`
+(
+    `userId`             INT(11)      NOT NULL,
+    `username`           VARCHAR(100) NOT NULL,
+    `email`              VARCHAR(150) NOT NULL,
+    `passwordHash`       VARCHAR(256) NOT NULL,
+    `passwordSalt`       VARCHAR(256) NOT NULL,
+    `isValid`            TINYINT(4)   NOT NULL,
+    `isComputedPassword` TINYINT(4)   NOT NULL,
+    `lastLoginDate`      BIGINT       NOT NULL,
+    `registeredSince`    BIGINT       NOT NULL,
+    `sessionLifetime`    INT(11)      NOT NULL,
+    `rightGroupId`       INT(11)      NOT NULL,
+    `yubikey`            VARCHAR(256) DEFAULT NULL,
+    `otp1`               VARCHAR(256) DEFAULT NULL,
+    `otp2`               VARCHAR(256) DEFAULT NULL,
+    `otp3`               VARCHAR(256) DEFAULT NULL,
+    `otp4`               VARCHAR(256) DEFAULT NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE `Zap` (
@@ -956,32 +961,34 @@ ALTER TABLE `Session`
   ADD KEY `userId` (`userId`);
 
 ALTER TABLE `Speed`
-  ADD PRIMARY KEY (`speedId`),
-  ADD KEY `agentId` (`agentId`),
-  ADD KEY `taskId` (`taskId`);
+    ADD PRIMARY KEY (`speedId`),
+    ADD KEY `agentId` (`agentId`),
+    ADD KEY `taskId` (`taskId`);
 
 ALTER TABLE `StoredValue`
-  ADD PRIMARY KEY (`storedValueId`);
+    ADD PRIMARY KEY (`storedValueId`);
 
 ALTER TABLE `Supertask`
-  ADD PRIMARY KEY (`supertaskId`);
+    ADD PRIMARY KEY (`supertaskId`);
 
 ALTER TABLE `SupertaskPretask`
-  ADD PRIMARY KEY (`supertaskPretaskId`),
-  ADD KEY `supertaskId` (`supertaskId`),
-  ADD KEY `pretaskId` (`pretaskId`);
+    ADD PRIMARY KEY (`supertaskPretaskId`),
+    ADD KEY `supertaskId` (`supertaskId`),
+    ADD KEY `pretaskId` (`pretaskId`);
 
 ALTER TABLE `Task`
-  ADD PRIMARY KEY (`taskId`),
-  ADD KEY `crackerBinaryId` (`crackerBinaryId`);
+    ADD PRIMARY KEY (`taskId`),
+    ADD KEY `crackerBinaryId` (`crackerBinaryId`),
+    ADD KEY `createdByUserId` (`createdByUserId`);
 
 ALTER TABLE `TaskDebugOutput`
-  ADD PRIMARY KEY (`taskDebugOutputId`);
+    ADD PRIMARY KEY (`taskDebugOutputId`);
 
 ALTER TABLE `TaskWrapper`
-  ADD PRIMARY KEY (`taskWrapperId`),
-  ADD KEY `hashlistId` (`hashlistId`),
-  ADD KEY `accessGroupId` (`accessGroupId`);
+    ADD PRIMARY KEY (`taskWrapperId`),
+    ADD KEY `hashlistId` (`hashlistId`),
+    ADD KEY `accessGroupId` (`accessGroupId`),
+    ADD KEY `createdByUserId` (`createdByUserId`);
 
 ALTER TABLE `User`
   ADD PRIMARY KEY (`userId`),
@@ -1208,40 +1215,42 @@ ALTER TABLE `HealthCheckAgent`
   ADD CONSTRAINT `HealthCheckAgent_ibfk_2` FOREIGN KEY (`healthCheckId`) REFERENCES `HealthCheck` (`healthCheckId`);
 
 ALTER TABLE `NotificationSetting`
-  ADD CONSTRAINT `NotificationSetting_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `User` (`userId`);
+    ADD CONSTRAINT `NotificationSetting_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `User` (`userId`);
 
 ALTER TABLE `Pretask`
-  ADD CONSTRAINT `Pretask_ibfk_1` FOREIGN KEY (`crackerBinaryTypeId`) REFERENCES `CrackerBinaryType` (`crackerBinaryTypeId`);
+    ADD CONSTRAINT `Pretask_ibfk_1` FOREIGN KEY (`crackerBinaryTypeId`) REFERENCES `CrackerBinaryType` (`crackerBinaryTypeId`);
 
 ALTER TABLE `Session`
-  ADD CONSTRAINT `Session_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `User` (`userId`);
+    ADD CONSTRAINT `Session_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `User` (`userId`);
 
 ALTER TABLE `Speed`
-  ADD CONSTRAINT `Speed_ibfk_1` FOREIGN KEY (`agentId`) REFERENCES `Agent` (`agentId`),
-  ADD CONSTRAINT `Speed_ibfk_2` FOREIGN KEY (`taskId`)  REFERENCES `Task` (`taskId`);
+    ADD CONSTRAINT `Speed_ibfk_1` FOREIGN KEY (`agentId`) REFERENCES `Agent` (`agentId`),
+    ADD CONSTRAINT `Speed_ibfk_2` FOREIGN KEY (`taskId`) REFERENCES `Task` (`taskId`);
 
 ALTER TABLE `SupertaskPretask`
-  ADD CONSTRAINT `SupertaskPretask_ibfk_1` FOREIGN KEY (`supertaskId`) REFERENCES `Supertask` (`supertaskId`),
-  ADD CONSTRAINT `SupertaskPretask_ibfk_2` FOREIGN KEY (`pretaskId`)   REFERENCES `Pretask` (`pretaskId`);
+    ADD CONSTRAINT `SupertaskPretask_ibfk_1` FOREIGN KEY (`supertaskId`) REFERENCES `Supertask` (`supertaskId`),
+    ADD CONSTRAINT `SupertaskPretask_ibfk_2` FOREIGN KEY (`pretaskId`) REFERENCES `Pretask` (`pretaskId`);
 
 ALTER TABLE `Task`
-  ADD CONSTRAINT `Task_ibfk_1` FOREIGN KEY (`crackerBinaryId`)     REFERENCES `CrackerBinary` (`crackerBinaryId`),
-  ADD CONSTRAINT `Task_ibfk_2` FOREIGN KEY (`crackerBinaryTypeId`) REFERENCES `CrackerBinaryType` (`crackerBinaryTypeId`),
-  ADD CONSTRAINT `Task_ibfk_3` FOREIGN KEY (`taskWrapperId`)       REFERENCES `TaskWrapper` (`taskWrapperId`);
+    ADD CONSTRAINT `Task_ibfk_1` FOREIGN KEY (`crackerBinaryId`) REFERENCES `CrackerBinary` (`crackerBinaryId`),
+    ADD CONSTRAINT `Task_ibfk_2` FOREIGN KEY (`crackerBinaryTypeId`) REFERENCES `CrackerBinaryType` (`crackerBinaryTypeId`),
+    ADD CONSTRAINT `Task_ibfk_3` FOREIGN KEY (`taskWrapperId`) REFERENCES `TaskWrapper` (`taskWrapperId`),
+    ADD CONSTRAINT `Task_ibfk_4` FOREIGN KEY (`createdByUserId`) REFERENCES `User` (`userId`);
 
 ALTER TABLE `TaskDebugOutput`
-  ADD CONSTRAINT `TaskDebugOutput_ibfk_1` FOREIGN KEY (`taskId`) REFERENCES `Task` (`taskId`);
+    ADD CONSTRAINT `TaskDebugOutput_ibfk_1` FOREIGN KEY (`taskId`) REFERENCES `Task` (`taskId`);
 
 ALTER TABLE `TaskWrapper`
-  ADD CONSTRAINT `TaskWrapper_ibfk_1` FOREIGN KEY (`hashlistId`)    REFERENCES `Hashlist` (`hashlistId`),
-  ADD CONSTRAINT `TaskWrapper_ibfk_2` FOREIGN KEY (`accessGroupId`) REFERENCES `AccessGroup` (`accessGroupId`);
+    ADD CONSTRAINT `TaskWrapper_ibfk_1` FOREIGN KEY (`hashlistId`) REFERENCES `Hashlist` (`hashlistId`),
+    ADD CONSTRAINT `TaskWrapper_ibfk_2` FOREIGN KEY (`accessGroupId`) REFERENCES `AccessGroup` (`accessGroupId`),
+    ADD CONSTRAINT `TaskWrapper_ibfk_3` FOREIGN KEY (`createdByUserId`) REFERENCES `User` (`userId`);
 
 ALTER TABLE `User`
-  ADD CONSTRAINT `User_ibfk_1` FOREIGN KEY (`rightGroupId`) REFERENCES `RightGroup` (`rightGroupId`);
+    ADD CONSTRAINT `User_ibfk_1` FOREIGN KEY (`rightGroupId`) REFERENCES `RightGroup` (`rightGroupId`);
 
 ALTER TABLE `Zap`
-  ADD CONSTRAINT `Zap_ibfk_1` FOREIGN KEY (`agentId`)    REFERENCES `Agent` (`agentId`),
-  ADD CONSTRAINT `Zap_ibfk_2` FOREIGN KEY (`hashlistId`) REFERENCES `Hashlist` (`hashlistId`);
+    ADD CONSTRAINT `Zap_ibfk_1` FOREIGN KEY (`agentId`) REFERENCES `Agent` (`agentId`),
+    ADD CONSTRAINT `Zap_ibfk_2` FOREIGN KEY (`hashlistId`) REFERENCES `Hashlist` (`hashlistId`);
 
 /*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;

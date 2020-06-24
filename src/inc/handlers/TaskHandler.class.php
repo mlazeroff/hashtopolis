@@ -138,6 +138,7 @@ class TaskHandler implements Handler {
     $enforcePipe = intval(@$_POST['enforcePipe']);
     $usePreprocessor = intval(@$_POST['usePreprocessor']);
     $preprocessorCommand = @$_POST['preprocessorCommand'];
+    $createdByUserId = Login::getInstance()->getUserID();
     
     $crackerBinaryType = Factory::getCrackerBinaryTypeFactory()->get($crackerBinaryTypeId);
     $crackerBinary = Factory::getCrackerBinaryFactory()->get($crackerBinaryVersionId);
@@ -228,7 +229,7 @@ class TaskHandler implements Handler {
     }
     
     Factory::getAgentFactory()->getDB()->beginTransaction();
-    $taskWrapper = new TaskWrapper(null, $priority, DTaskTypes::NORMAL, $hashlistId, $accessGroup->getId(), "", 0, 0);
+    $taskWrapper = new TaskWrapper(null, $priority, DTaskTypes::NORMAL, $hashlistId, $accessGroup->getId(), "", 0, 0, $createdByUserId);
     $taskWrapper = Factory::getTaskWrapperFactory()->save($taskWrapper);
     
     if (AccessControl::getInstance()->hasPermission(DAccessControl::CREATE_TASK_ACCESS)) {
@@ -255,7 +256,8 @@ class TaskHandler implements Handler {
         $chunkSize,
         $enforcePipe,
         $usePreprocessor,
-        $preprocessorCommand
+        $preprocessorCommand,
+        $createdByUserId
       );
     }
     else {
@@ -288,7 +290,8 @@ class TaskHandler implements Handler {
         0,
         0,
         0,
-        ''
+        '',
+        $createdByUserId
       );
       $forward = "pretasks.php";
     }
