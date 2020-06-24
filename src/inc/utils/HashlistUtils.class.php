@@ -109,7 +109,7 @@ class HashlistUtils {
         if ($task->getPriority() > 0) {
           $taskPriority = $priorityBase + $task->getPriority();
         }
-        $taskWrapper = new TaskWrapper(null, $taskPriority, DTaskTypes::NORMAL, $hashlist->getId(), $hashlist->getAccessGroupId(), "", 0, 0, $user->getId());
+        $taskWrapper = new TaskWrapper(null, $taskPriority, DTaskTypes::NORMAL, $hashlist->getId(), $hashlist->getAccessGroupId(), "", 0, 0);
         $taskWrapper = Factory::getTaskWrapperFactory()->save($taskWrapper);
         
         $newTask = new Task(
@@ -135,8 +135,7 @@ class HashlistUtils {
           0,
           0,
           0,
-          '',
-            $user->getId()
+          ''
         );
         $newTask = Factory::getTaskFactory()->save($newTask);
         $addCount++;
@@ -497,8 +496,8 @@ class HashlistUtils {
     $superHashlists = $joined[Factory::getHashlistFactory()->getModelName()];
     $toDelete = [];
     foreach ($superHashlists as $superHashlist) {
-      Factory::getHashlistFactory()->dec($superHashlist, Hashlist::HASH_COUNT);
-      Factory::getHashlistFactory()->dec($superHashlist, Hashlist::CRACKED);
+      Factory::getHashlistFactory()->dec($superHashlist, Hashlist::HASH_COUNT, $hashlist->getHashCount());
+      Factory::getHashlistFactory()->dec($superHashlist, Hashlist::CRACKED, $hashlist->getCracked());
   
       if ($superHashlist->getHashCount() <= 0) {
         // this superhashlist has no hashlist which belongs to it anymore -> delete it
